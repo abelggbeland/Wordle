@@ -1,0 +1,19 @@
+﻿<div class="container" @onclick="ToggleSwich">
+    <label><slot></slot></label>
+    <div class="switch @(Checked ? "checked-switch" : "")">
+        <span class="knob @(Checked ? "checked-knob" : "")"></span>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public bool Checked { get; set; } = false;
+
+    [Parameter]    
+    public EventCallback OnSwitch { get; set; }
+
+    private void ToggleSwich()
+    {
+        Checked = !Checked;
+        OnSwitch.InvokeAsync();
+    }
+}

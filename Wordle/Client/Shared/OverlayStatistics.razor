@@ -1,0 +1,82 @@
+﻿@inject IGameService gameService
+@inject IJSRuntime JSRuntime
+
+<div class="overlay @CssOnClose" style="@(StatisticeOpen ? "" : Disply)" @onclick="CloseMenu">
+    <div class="content center" id="game" style="@(isData ? "height: 450px;": "height: 250px;")">
+        <div class="close-icon">
+            <game-icon icon="close" style="margin-right: 15px">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"> 
+                    <path fill="var(--color-tone-1)" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+                </svg>
+            </game-icon>
+        </div>
+        <slot>
+            <StatisticsContent isData="@isData" WinDistribution="@WinDistribution" Played="@Played" WinPercent="@WinPercent" WinStreak="@WinStreak" MaxStreak="MaxStreak"></StatisticsContent>
+        </slot>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public bool StatisticeOpen { get; set; }
+    [Parameter]    
+    public EventCallback OnClose { get; set; }
+    private string CssOnClose;
+    private string Disply = "display: none;";
+    private bool isData;
+    private List<int> WinDistribution;
+    private int Played { get; set; }
+    private decimal WinPercent { get; set; }
+    private int WinStreak { get; set; }
+    private int MaxStreak { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        WinDistribution = await gameService.GetWinDistributionList();
+        Played = await gameService.GetPlayed();
+        WinPercent = await gameService.GetWinPercent();
+        WinStreak = await gameService.GetWinStreak();
+        MaxStreak = await gameService.GetMaxStreak();
+
+        if(await gameService.GetPlayed() == 0 &&
+           await gameService.GetWinPercent() == 0 &&
+           await gameService.GetWinStreak() == 0 &&
+           await gameService.GetMaxStreak() == 0)
+        {
+            isData = false;
+        }
+        else
+        {
+            isData = true;
+        }
+    }
+
+    private async Task CloseMenu()
+    {
+        if(await gameService.GetPlayed() == 0 &&
+           await gameService.GetWinPercent() == 0 &&
+           await gameService.GetWinStreak() == 0 &&
+           await gameService.GetMaxStreak() == 0)
+        {
+            isData = false;
+        }
+        else
+        {
+            isData = true;
+        }
+
+        if(StatisticeOpen)
+        {
+            CssOnClose = "closing";
+            await Task.Delay(150);
+            CssOnClose = "";
+            Disply = "display: none;";
+        }
+        else
+        {
+            CssOnClose = "";
+            Disply = "display: none;";
+        }
+        await JSRuntime.InvokeVoidAsync("focusInput", "backgroundkeyboard");
+        await OnClose.InvokeAsync();
+    }
+}

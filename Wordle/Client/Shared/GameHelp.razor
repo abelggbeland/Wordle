@@ -1,0 +1,82 @@
+﻿<section>
+    <div class="instructions">
+        <p>Guess the <strong>WORDLE</strong> in six tries.</p>
+        <p>Each guess must be a valid five-letter word. Hit the enter button to submit.</p>
+        <p>After each guess, the color of the tiles will change to show how close your guess was to the word.</p>
+        <div class="examples">
+            <p><strong>Examples</strong></p>
+            <div class="example">
+                <div class="row" style="padding-left: 18px">
+                    <div class="tile">
+                        <Tile Column="0" TileValue="w" animation="@animationString" TileState="correct" Delay="0" Solved="false" SavedTileState="empty"></Tile>
+                    </div>
+                    <div class="tile">
+                        <Tile Column="0" TileValue="e" animation="idle" TileState="tbd" Delay="0" Solved="false"></Tile>
+                    </div>
+                    <div class="tile">
+                        <Tile Column="0" TileValue="a" animation="idle" TileState="tbd" Delay="0" Solved="false"></Tile>
+                    </div>
+                    <div class="tile">
+                        <Tile Column="0" TileValue="r" animation="idle" TileState="tbd" Delay="0" Solved="false"></Tile>
+                    </div>
+                    <div class="tile">
+                        <Tile Column="0" TileValue="y" animation="idle" TileState="tbd" Delay="0" Solved="false"></Tile>
+                    </div>
+                </div>
+                <p>The letter <strong>W</strong> is in the word and in the correct spot.</p>
+            </div>
+            <div class="example">
+                <div class="row" style="padding-left: 18px">
+                    <div class="tile">
+                        <Tile Column="0" TileValue="p" animation="idle" TileState="tbd" Delay="0" Solved="false"></Tile>
+                    </div>
+                    <div class="tile">
+                        <Tile Column="0" TileValue="i" animation="@animationString" TileState="present" Delay="0" Solved="false" SavedTileState="empty"></Tile>
+                    </div>
+                    <div class="tile">
+                        <Tile Column="0" TileValue="l" animation="idle" TileState="tbd" Delay="0" Solved="false"></Tile>
+                    </div>
+                    <div class="tile">
+                        <Tile Column="0" TileValue="l" animation="idle" TileState="tbd" Delay="0" Solved="false"></Tile>
+                    </div>
+                    <div class="tile">
+                        <Tile Column="0" TileValue="s" animation="idle" TileState="tbd" Delay="0" Solved="false"></Tile>
+                    </div>
+                </div>
+                <p>The letter <strong>I</strong> is in the word but in the wrong spot.</p>
+            </div>
+            <div class="example">
+                <div class="row" style="padding-left: 18px">
+                    <div class="tile">
+                        <Tile Column="0" TileValue="v" animation="idle" TileState="tbd" Delay="0" Solved="false"></Tile>
+                    </div>
+                    <div class="tile">
+                        <Tile Column="0" TileValue="a" animation="idle" TileState="tbd" Delay="0" Solved="false"></Tile>
+                    </div>
+                    <div class="tile">
+                        <Tile Column="0" TileValue="g" animation="idle" TileState="tbd" Delay="0" Solved="false"></Tile>
+                    </div>
+                    <div class="tile">
+                        <Tile Column="0" TileValue="u" animation="@animationString" TileState="absent" Delay="0" Solved="false" SavedTileState="empty"></Tile>
+                    </div>
+                    <div class="tile">
+                        <Tile Column="0" TileValue="e" animation="idle" TileState="tbd" Delay="0" Solved="false"></Tile>
+                    </div>
+                </div>
+                <p>The letter <strong>U</strong> is not in the word in any spot.</p>
+            </div>
+        </div>
+        <p><strong>A new WORDLE will be available each day!<strong></strong></strong></p><strong>
+            <strong>
+            </strong>
+        </strong>
+    </div><strong>
+        <strong>
+        </strong>
+    </strong>
+</section>
+
+@code {
+    [Parameter]
+    public string animationString { get; set; }
+}

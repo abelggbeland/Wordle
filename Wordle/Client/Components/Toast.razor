@@ -1,0 +1,16 @@
+﻿@inherits ToastBase
+
+<div class="overlay-toast">
+    @foreach (var toast in toastModels)
+    {
+        <div class="center">
+            <div class="toast @(toast.IsVisible ? "toast-visible" : null) @toast.BackgroundCssClass">
+                <div class="toast-body">
+                    <p>@toast.Message</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+

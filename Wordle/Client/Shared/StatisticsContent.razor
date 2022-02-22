@@ -1,0 +1,153 @@
+﻿@inject IGameService gameService
+
+<div class="container">
+    <h1>Statistics</h1>
+    <div id="statistics">
+        <div class="statistic-container">
+            <div class="statistic">@Played</div>
+            <div class="label">Played</div>
+        </div>
+
+        <div class="statistic-container">
+            <div class="statistic">@WinPercent</div>
+            <div class="label">Win %</div>
+        </div>
+
+        <div class="statistic-container">
+            <div class="statistic">@WinStreak</div>
+            <div class="label">Current Streak</div>
+        </div>
+
+        <div class="statistic-container">
+            <div class="statistic">@MaxStreak</div>
+            <div class="label">Max Streak</div>
+        </div>
+    </div>
+    <h1>Guess Distribution</h1>
+    <div id="guess-distribution">
+        @if (isData)
+        {
+            <div id="guess-distribution">
+                <div class="graph-container">
+                    <div class="guess">1</div>
+                    <div class="graph">
+                        <div class="graph-bar @(WinDistribution[0] != 0 ? "align-right highlight" : "")" style="@(WinDistribution[0] != 0 ? "width: 100%;" : "width: 7%;")">
+                            <div class="num-guesses">@WinDistribution[0]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="graph-container">
+                    <div class="guess">2</div>
+                    <div class="graph">
+                        <div class="graph-bar @(WinDistribution[1] != 0 ? "align-right highlight" : "")" style="@(WinDistribution[1] != 0 ? "width: 100%;" : "width: 7%;")">
+                            <div class="num-guesses">@WinDistribution[1]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="graph-container">
+                    <div class="guess">3</div>
+                    <div class="graph">
+                        <div class="graph-bar @(WinDistribution[2] != 0 ? "align-right highlight" : "")" style="@(WinDistribution[2] != 0 ? "width: 100%;" : "width: 7%;")">
+                            <div class="num-guesses">@WinDistribution[2]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="graph-container">
+                    <div class="guess">4</div>
+                    <div class="graph">
+                        <div class="graph-bar @(WinDistribution[3] != 0 ? "align-right highlight" : "")" style="@(WinDistribution[3] != 0 ? "width: 100%;" : "width: 7%;")">
+                            <div class="num-guesses">@WinDistribution[3]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="graph-container">
+                    <div class="guess">5</div>
+                    <div class="graph">
+                        <div class="graph-bar @(WinDistribution[4] != 0 ? "align-right highlight" : "")" style="@(WinDistribution[4] != 0 ? "width: 100%;" : "width: 7%;")">
+                            <div class="num-guesses">@WinDistribution[4]</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="graph-container">
+                    <div class="guess">6</div>
+                    <div class="graph">
+                        <div class="graph-bar @(WinDistribution[5] != 0 ? "align-right highlight" : "")" style="@(WinDistribution[5] != 0 ? "width: 100%;" : "width: 7%;")">
+                            <div class="num-guesses">@WinDistribution[5]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="no-data">No Data</div>
+        }
+    </div>
+    <div class="footer">
+        @if (isData)
+        {
+            <div class="countdown">
+                <h1>Next WORDLE</h1>
+                <div id="timer">
+                    <div class="statistic-container">
+                        <div class="statistic timer">
+                            <countdown-timer>
+                                <div id="timer">@TimerText</div>
+                            </countdown-timer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="share">
+                <button id="share-button">
+                    <p style="margin-top:15px;">
+                        Share
+                    </p>
+                    <game-icon icon="share" style="margin-bottom: 12px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                            <path fill="var(--white)" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92zM18 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM6 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm12 7.02c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"></path>
+                        </svg>
+                    </game-icon>
+                </button>
+            </div>
+        }
+    </div>
+</div>
+@code {
+    [Parameter]
+    public bool isData { get; set; } = true;
+    [Parameter]
+    public int Played { get; set; } = 0;
+    [Parameter]
+    public decimal WinPercent { get; set; } = 0;
+    [Parameter]
+    public int WinStreak { get; set; } = 0;
+    [Parameter]
+    public int MaxStreak { get; set; } = 0;
+    [Parameter]
+    public List<int> WinDistribution { get; set; } = new();
+    private string TimerText = string.Empty;
+    [Parameter]
+    public TimeSpan untilMidnight { get; set; } = DateTime.Today.AddDays (1.0) - DateTime.Now;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Timer();
+    }
+
+    private async Task Timer()
+    {
+        while (untilMidnight > new TimeSpan())
+        {
+            await Task.Delay(1000);
+            untilMidnight = untilMidnight.Subtract(new TimeSpan(0, 0, 1));
+            TimerText = untilMidnight.ToString("''hh':'mm':'ss''");
+            StateHasChanged();
+        }
+    }
+}

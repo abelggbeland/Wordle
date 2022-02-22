@@ -1,0 +1,57 @@
+﻿<div class=row data-animation="@animation">
+    @for (var i = 0; i < 5; i++)
+    {
+        @if (RowValue.Length <= i)
+        {
+            <Tile Column="i" TileValue="@string.Empty" TileState="empty" Delay="i * 100" Solved="@Sloved"></Tile>
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(RowSubmit))
+            {
+                <Tile Column="i" TileValue="@RowValue[i].ToString()" animation="pop" TileState="tbd" Delay="0" Solved="@Sloved"></Tile>
+            }
+            else
+            {
+                if (Loaded == false)
+                {
+                    <Tile Column="i"
+                      TileValue="@RowValue[i].ToString()"
+                      animation="flip-in"
+                      TileState="@RowShow[i]"
+                      Delay="i * 400"
+                      Solved="@Sloved"
+                      TransitionDurationMilliseconds="i * 400"></Tile>
+                }
+                else
+                {
+                    <Tile Column="i"
+                      TileValue="@RowValue[i].ToString()"
+                      animation="flip-in"
+                      TileState="@RowShow[i]"
+                      Delay="i * 300"
+                      Solved="@Sloved"
+                      TransitionDurationMilliseconds="i * 300"
+                      Loaded="@Loaded"></Tile>
+                }
+            }
+        }
+    }
+</div>
+
+
+@code {
+    [Parameter]
+    public string RowValue { get; set; }
+    [Parameter]
+    public string RowSubmit { get; set; }
+    [Parameter]
+    public string animation { get; set; }
+    [Parameter]
+    public bool Sloved { get; set; }
+    [Parameter]
+    public List<string> RowShow { get; set; } = new();
+    [Parameter]
+    public bool Loaded { get; set; }
+    private string state { get; set; }
+}

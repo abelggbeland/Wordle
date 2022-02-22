@@ -1,0 +1,125 @@
+﻿@inject IGameService gameService
+@inject IJSRuntime JSRuntime
+
+<div class="background" tabindex="1" placeholder="NoTabIndex" @onkeydown="HandleKeyDown" id="backgroundkeyboard"></div>
+
+<div id="keyboard">
+    <div class="row">
+        <button @onclick="() => presskey('q')" data-key="q" data-state="@KeyValues["q"]">q</button>
+        <button @onclick="() => presskey('w')" data-key="w" data-state="@KeyValues["w"]">w</button>
+        <button @onclick="() => presskey('e')" data-key="e" data-state="@KeyValues["e"]">e</button>
+        <button @onclick="() => presskey('r')" data-key="r" data-state="@KeyValues["r"]">r</button>
+        <button @onclick="() => presskey('t')" data-key="t" data-state="@KeyValues["t"]">t</button>
+        <button @onclick="() => presskey('y')" data-key="y" data-state="@KeyValues["y"]">y</button>
+        <button @onclick="() => presskey('u')" data-key="u" data-state="@KeyValues["u"]">u</button>
+        <button @onclick="() => presskey('i')" data-key="i" data-state="@KeyValues["i"]">i</button>
+        <button @onclick="() => presskey('o')" data-key="o" data-state="@KeyValues["o"]">o</button>
+        <button @onclick="() => presskey('p')" data-key="p" data-state="@KeyValues["p"]">p</button>
+    </div>
+    <div class="row">
+        <div class="spacer half"></div>
+        <button @onclick="() => presskey('a')" data-key="a" data-state="@KeyValues["a"]">a</button>
+        <button @onclick="() => presskey('s')" data-key="s" data-state="@KeyValues["s"]">s</button>
+        <button @onclick="() => presskey('d')" data-key="d" data-state="@KeyValues["d"]">d</button>
+        <button @onclick="() => presskey('f')" data-key="f" data-state="@KeyValues["f"]">f</button>
+        <button @onclick="() => presskey('g')" data-key="g" data-state="@KeyValues["g"]">g</button>
+        <button @onclick="() => presskey('h')" data-key="h" data-state="@KeyValues["h"]">h</button>
+        <button @onclick="() => presskey('j')" data-key="j" data-state="@KeyValues["j"]">j</button>
+        <button @onclick="() => presskey('k')" data-key="k" data-state="@KeyValues["k"]">k</button>
+        <button @onclick="() => presskey('l')" data-key="l" data-state="@KeyValues["l"]">l</button>
+        <div class="spacer half"></div>
+    </div>
+    <div class="row">
+        <button @onclick="() => presskey('↵')" class="one-and-a-half">enter</button>
+        <button @onclick="() => presskey('z')" data-key="z" data-state="@KeyValues["z"]">z</button>
+        <button @onclick="() => presskey('x')" data-key="x" data-state="@KeyValues["x"]">x</button>
+        <button @onclick="() => presskey('c')" data-key="c" data-state="@KeyValues["c"]">c</button>
+        <button @onclick="() => presskey('v')" data-key="v" data-state="@KeyValues["v"]">v</button>
+        <button @onclick="() => presskey('b')" data-key="b" data-state="@KeyValues["b"]">b</button>
+        <button @onclick="() => presskey('n')" data-key="n" data-state="@KeyValues["n"]">n</button>
+        <button @onclick="() => presskey('m')" data-key="m" data-state="@KeyValues["m"]">m</button>
+        <button @onclick="() => presskey('←')" data-key="←" class="one-and-a-half">
+            <game-icon icon="backspace">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                    <path fill="var(--color-tone-1)" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"></path>
+                </svg>
+            </game-icon>
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<char> OnKeyPress { get; set; }
+    [Parameter]
+    public List<Key> Keys { get; set; } = new();
+    [Parameter]
+    public bool isVisable { get; set; }
+    private Dictionary<string, string> KeyValues = new Dictionary<string, string>
+    {
+        {"q", ""},
+        {"w", ""},
+        {"e", ""},
+        {"r", ""},
+        {"t", ""},
+        {"y", ""},
+        {"u", ""},
+        {"i", ""},
+        {"o", ""},
+        {"p", ""},
+        {"a", ""},
+        {"s", ""},
+        {"d", ""},
+        {"f", ""},
+        {"g", ""},
+        {"h", ""},
+        {"j", ""},
+        {"k", ""},
+        {"l", ""},
+        {"z", ""},
+        {"x", ""},
+        {"c", ""},
+        {"v", ""},
+        {"b", ""},
+        {"n", ""},
+        {"m", ""}
+    };
+
+    private async Task presskey(char key)
+    {
+        await OnKeyPress.InvokeAsync(key);
+        await JSRuntime.InvokeVoidAsync("focusInput", "backgroundkeyboard");
+    }
+
+    private async void HandleKeyDown(KeyboardEventArgs e)
+    {
+        Console.WriteLine(e.Key);
+        if (e.Key == "Enter")
+        {
+            await presskey('↵');
+            return;
+        }
+
+        if (e.Key == "Backspace")
+        {
+            await presskey('←');
+            return;
+        }
+
+        if (KeyValues.ContainsKey(e.Key))
+        {
+            await presskey(e.Key.ToCharArray()[0]);
+            return;
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await Task.Delay(4500);
+        foreach (var key in Keys)
+        {
+            KeyValues[key.Letter] = key.State;
+        }
+    }
+
+}

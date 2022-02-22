@@ -1,0 +1,111 @@
+﻿@inject IGameService gameService
+
+<div class="sections">
+    <section>
+        <div class="setting">
+            <div class="text">
+                <div class="title">Hard Mode</div>
+                <div class="description">Any revealed hints must be used in subsequent guesses</div>
+            </div>
+            <div class="control">
+                <SettingsSwitch OnSwitch="HardModeToggle" Checked="HardModeOn"></SettingsSwitch>
+            </div>
+        </div>
+        <div class="setting">
+            <div class="text">
+                <div class="title">Dark Theme</div>
+            </div>
+            <div class="control">
+                <SettingsSwitch OnSwitch="DarkThemeToggle" Checked="DarkThemeOn"></SettingsSwitch>
+            </div>
+        </div>
+        <div class="setting">
+            <div class="text">
+                <div class="title">High Contrast Mode</div>
+                <div class="description">For improved color vision</div>
+            </div>
+            <div class="control">
+                <SettingsSwitch OnSwitch="HighContrastModeToggle" Checked="HighContrastModeOn"></SettingsSwitch>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="setting">
+            <div class="text">
+                <div class="title">Feedback</div>
+            </div>
+            <div class="control">
+                <a href="mailto:nytgames@nytimes.com?subject=Wordle%20Feedback&amp;body=%0D%0A%0D%0A%0A--%0ADevice%20summary%3A%0APage%3A%20%2Fgames%2Fwordle%0APlatform%3A%20Web%20(Desktop)%20%0ABrowser%3A%20Chrome%0AScreen%20Resolution%3A%202560%20x%201440%0AViewport%20Size%3A%201844%20x%201329%0ATimezone%3A%20UTC-7%0ABuild%3A%204d41d2be%0A%20%20" title="nytgames@nytimes.com">Email</a>
+            </div>
+        </div>
+        <div class="setting">
+            <div class="text">
+                <div class="title">Community</div>
+            </div>
+            <div class="control">
+                <a href="https://twitter.com/NYTGames" target="blank" title="NYTGames">Twitter</a>
+            </div>
+        </div>
+        <div class="setting">
+            <div class="text">
+                <div class="title">Questions?</div>
+            </div>
+            <div class="control">
+                <a href="https://help.nytimes.com/hc/en-us/articles/360029050872-Word-Games-and-Logic-Puzzles#h_01FVGCB2Z00ZQMDMCYWBPWJNXB" target="blank">FAQ</a>
+            </div>
+        </div>
+    </section>
+</div>
+@if (DarkThemeOn)
+{
+    <BodyElement CssClass="nightmode" />
+}
+else
+{
+    <BodyElement RevoveCssClass="nightmode" />
+}
+
+@if (HighContrastModeOn)
+{
+    <BodyElement CssClass="colorblind" />
+}
+else
+{
+    <BodyElement RevoveCssClass="colorblind" />
+}
+
+@code {
+    private bool HardModeOn;
+    private bool DarkThemeOn;
+    private bool HighContrastModeOn;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        DarkThemeOn = await gameService.GetDarkTheme();
+        HighContrastModeOn = await gameService.GetHighContrast();
+        HardModeOn = await gameService.GetHardMode();
+    }
+
+    private async Task DarkThemeToggle()
+    {
+        await gameService.SetDarkTheme(!(await gameService.GetDarkTheme()));
+        DarkThemeOn = await gameService.GetDarkTheme();
+        StateHasChanged();
+    }
+
+    private async Task HighContrastModeToggle()
+    {
+        await gameService.SetHighContrast(!(await gameService.GetHighContrast()));
+        HighContrastModeOn = await gameService.GetHighContrast();
+        StateHasChanged();
+    }
+
+    private async void HardModeToggle()
+    {
+        await gameService.SetHardMode(!(await gameService.GetHardMode()));
+        HardModeOn = await gameService.GetHardMode();
+        StateHasChanged();
+    }
+}

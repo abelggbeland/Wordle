@@ -1,0 +1,320 @@
+﻿@inject IGameService gameService
+@inject ToastService toastService
+
+<OverLay OverlayOpen="@OverlayOpen" OnClose="ToggleOverlay"></OverLay>
+<OverlayStatistics StatisticeOpen="@StatisticeOpen" OnClose="ToggleStatistice"></OverlayStatistics>
+<OverlayHelp HelpOpen="@OverlayHelpOpen" OnClose="ToggleHelp"></OverlayHelp>
+<OverlaySetting SettignsOpen="@SettingsOpen" OnClose="ToggleSettings"></OverlaySetting>
+
+<div class="top-row" style="background-color: var(--color-background);">
+
+    <div class="menu-left" style="display: flex;">
+        <button id="nav-button" class="icon" aria-label="Navigation menu. Click for links to other NYT Games and our Privacy Policy." tabindex="-1" @onclick="ToggleMenu">
+            <nav-icon>
+                <svg width="21" height="17" viewBox="0 0 21 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="0.172974" width="20" height="3" rx="1.5" fill="var(--color-tone-1)"></rect>
+                    <rect x="0.172974" y="7" width="20" height="3" rx="1.5" fill="var(--color-tone-1)"></rect>
+                    <rect x="0.172974" y="14" width="20" height="3" rx="1.5" fill="var(--color-tone-1)"></rect>
+                </svg>
+            </nav-icon>
+        </button>
+        <button id="help-button" class="icon" aria-label="Help" tabindex="-1" @onclick="ToggleOverlay">
+            <game-icon icon="help">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                    <path fill="var(--color-tone-1)" d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path>
+                </svg>
+            </game-icon>
+        </button>
+
+    </div>
+
+    <div class="title"> Wordle </div>
+
+    <div class="menu-right">
+
+        <button id="statistics-button" class="icon" aria-label="Statistics" tabindex="-1" @onclick="ToggleStatistice">
+            <game-icon icon="statistics">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                    <path fill="var(--color-tone-1)" d="M16,11V3H8v6H2v12h20V11H16z M10,5h4v14h-4V5z M4,11h4v8H4V11z M20,19h-4v-6h4V19z"></path>
+                </svg>
+            </game-icon>
+        </button>
+
+        <button id="settings-button" class="icon" aria-label="Settings" tabindex="-1" @onclick="ToggleSettings">
+            <game-icon icon="settings">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                    <path fill="var(--color-tone-1)" d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"></path>
+                </svg>
+            </game-icon>
+        </button>
+
+
+    </div>
+
+</div>
+<div class="color"></div>
+<div id="game">
+    <OverlayNav MenuOpen="@MenuOpen" OnClose="ToggleMenu"></OverlayNav>
+
+    <div id="board-container">
+        <div id="board" style="width: 375px; height: 420px;">
+            @for (var i = 0; i < 6; i++)
+            {
+                if (rowShows != null)
+                {
+                    <GameRow RowValue="@rows[i].RowValue" animation="@rows[i].Animation" RowSubmit="@rows[i].RowSubmit" Sloved="@rows[i].Sloved" RowShow="rowShows[i]" Loaded=@rows[i].Loaded></GameRow>
+                }
+            }
+
+        </div>
+    </div>
+    <GameKeyboard OnKeyPress=@UpdateValue Keys="@Keys"></GameKeyboard>
+</div>
+
+@code {
+    public bool MenuOpen = false;
+    public bool OverlayOpen = false;
+    public bool StatisticeOpen = false;
+    public bool SettingsOpen = false;
+    public bool OverlayHelpOpen = false;
+    private string OverlayNavCss = "closing-nav";
+    private List<List<string>> rowShows = null;
+    List<Row> rows = null;
+    private int row = 0;
+    private List<Key> Keys = null;
+
+    public void ToggleSettings()
+    {
+        SettingsOpen = !SettingsOpen;
+    }
+
+    public void ToggleHelp()
+    {
+        OverlayHelpOpen = !OverlayHelpOpen;
+    }
+
+    public void ToggleOverlay()
+    {
+        OverlayOpen = !OverlayOpen;
+    }
+
+    public void ToggleStatistice()
+    {
+        StatisticeOpen = !StatisticeOpen;
+    }
+
+    public async Task ToggleMenu()
+    {
+        MenuOpen = !MenuOpen;
+    }
+
+    public string Word { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        TimeSpan Lasttime = await gameService.GetTime();
+        if ((DateTime.Today.AddDays(1.0) - DateTime.Now) > Lasttime)
+        {
+            await gameService.ResetGame();
+            await gameService.SetTime();
+        }
+        rows = await gameService.GetRows();
+        row = await gameService.GetRowCount();
+        var rowShowsServicecall = await gameService.GetRowShow();
+        rowShows = rowShowsServicecall;
+        Keys = await gameService.GetKeys();
+        await gameService.GetHardMode();
+        await gameService.GetDarkTheme();
+        await gameService.GetHighContrast();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await gameService.GetWinStreak();
+        await gameService.GetWinCount();
+        await gameService.GetPlayed();
+        await gameService.GetWinDistributionList();
+        await gameService.GetMaxStreak();
+
+        if (firstRender == true)
+        {
+            var end = await gameService.GetEnd();
+            var FirstLoad = await gameService.GetFirstLoad();
+            if (end == true)
+            {
+                await Task.Delay(1800);
+                ToggleStatistice();
+                StateHasChanged();
+            }
+            if (FirstLoad == true)
+            {
+                ToggleHelp();
+                StateHasChanged();
+            }
+        }
+
+    }
+
+    private async Task UpdateValue(char value)
+    {
+        var rowCount = await gameService.GetRowCount();
+        var row = await gameService.GetRow(rowCount);
+        var end = await gameService.GetEnd();
+        if (!end)
+        {
+            if (value == '←')
+            {
+                RemoveLetter();
+            }
+            else if (value == '↵')
+            {
+                if (row.RowValue.Length == 5)
+                {
+                    if (row.RowValue == gameService.Word)
+                    {
+                        await gameService.SetcheckString(row.RowValue);
+                        await gameService.SetRowSubmit(rowCount, row.RowValue);
+                        await gameService.SetRowSloved(rowCount, await gameService.checkWord(rowCount));
+                        rows[rowCount] = await gameService.GetRow(rowCount);
+                        rowShows = await gameService.GetRowShow();
+                        StateHasChanged();
+                        Keys = await gameService.GetKeys();
+                        await gameService.IncrementPlayed();
+                        await gameService.IncrementWinCount();
+                        await gameService.GetWinPercent();
+                        await gameService.IncrementWinStreak();
+                        await gameService.SetWinDistribution(rowCount);
+                        await gameService.SetEnd(true);
+                        await gameService.SetRowLoaded(rowCount, true);
+                        await Task.Delay(5000);
+                        ToggleStatistice();
+
+                    }
+                    else if (Words.WordsPossible.Contains(row.RowValue) || Words.WordsSolutions.Contains(row.RowValue))
+                    {
+                        bool mode = await gameService.GetHardMode();
+                        if (mode != true)
+                        {
+                            await gameService.SetcheckString(row.RowValue);
+                            await gameService.SetRowSubmit(rowCount, row.RowValue);
+                            await gameService.SetRowSloved(rowCount, await gameService.checkWord(rowCount));
+                            rows[rowCount] = await gameService.GetRow(rowCount);
+                            rowShows = await gameService.GetRowShow();
+                            StateHasChanged();
+                            Keys = await gameService.GetKeys();
+                            await gameService.SetRowLoaded(rowCount, true);
+
+                            if (rowCount == 5)
+                            {
+                                toastService.ShowToast(gameService.Word, ToastLevel.Info);
+                                await gameService.SetEnd(true);
+                                await gameService.ResetWinStreak();
+                            }
+                            else
+                            {
+                                await gameService.IncrementRowCount();
+                                rowCount = await gameService.GetRowCount();
+                                StateHasChanged();
+                            }
+                        }
+                        else
+                        {
+                            var keys = await gameService.GetKeys();
+                            var LetterToUse = keys.FindAll(k => k.State == "present" || k.State == "correct");
+                            bool IsValid = true;
+                            string FirstLetterFound = string.Empty;
+                            foreach (var letter in LetterToUse)
+                            {
+                                if (!row.RowValue.Contains(letter.Letter))
+                                {
+                                    FirstLetterFound = letter.Letter;
+                                    IsValid = false;
+                                }
+                            }
+
+                            if (IsValid)
+                            {
+                                await gameService.SetcheckString(row.RowValue);
+                                await gameService.SetRowSubmit(rowCount, row.RowValue);
+                                await gameService.SetRowSloved(rowCount, await gameService.checkWord(rowCount));
+                                rows[rowCount] = await gameService.GetRow(rowCount);
+                                rowShows = await gameService.GetRowShow();
+                                StateHasChanged();
+                                Keys = await gameService.GetKeys();
+                                await gameService.SetRowLoaded(rowCount, true);
+
+                                if (rowCount == 5)
+                                {
+                                    toastService.ShowToast(gameService.Word, ToastLevel.Info);
+                                    await gameService.SetEnd(true);
+                                    await gameService.ResetWinStreak();
+                                }
+                                else
+                                {
+                                    await gameService.IncrementRowCount();
+                                    rowCount = await gameService.GetRowCount();
+                                    StateHasChanged();
+                                }
+                            }
+                            else
+                            {
+                                await gameService.SetRowAnimation(rowCount, "Shake");
+                                rows[rowCount] = await gameService.GetRow(rowCount);
+                                toastService.ShowToast($"Guess must contain {FirstLetterFound}", ToastLevel.Info);
+                                await Task.Delay(1000);
+                                await gameService.SetRowAnimation(rowCount, "");
+                                rows[rowCount] = await gameService.GetRow(rowCount);
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        await gameService.SetRowAnimation(rowCount, "Shake");
+                        rows[rowCount] = await gameService.GetRow(rowCount);
+                        toastService.ShowToast("Not in word list", ToastLevel.Info);
+                        await Task.Delay(1000);
+                        await gameService.SetRowAnimation(rowCount, "");
+                        rows[rowCount] = await gameService.GetRow(rowCount);
+                    }
+                }
+                else
+                {
+                    await gameService.SetRowAnimation(rowCount, "Shake");
+                    rows[rowCount] = await gameService.GetRow(rowCount);
+                    toastService.ShowToast("Not enought letters", ToastLevel.Info);
+                    await Task.Delay(1000);
+                    await gameService.SetRowAnimation(rowCount, "");
+                    rows[rowCount] = await gameService.GetRow(rowCount);
+                }
+            }
+            else
+            {
+                if (row.RowValue.Length < 5)
+                {
+                    await PlaceLetter(value.ToString());
+                }
+            }
+        }
+
+    }
+
+    private async Task PlaceLetter(string letter)
+    {
+        var rowCount = await gameService.GetRowCount();
+        var row = await gameService.GetRow(rowCount);
+        await gameService.SetRowValue(rowCount, row.RowValue + letter);
+        rows[rowCount] = await gameService.GetRow(rowCount);
+    }
+
+    private async Task RemoveLetter()
+    {
+        int rowCount = await gameService.GetRowCount();
+        var row = await gameService.GetRow(rowCount);
+        if (!string.IsNullOrEmpty(row.RowValue))
+        {
+            await gameService.SetRowValue(rowCount, row.RowValue.Remove(row.RowValue.Length - 1, 1));
+            rows[rowCount] = await gameService.GetRow(rowCount);
+        }
+    }
+}

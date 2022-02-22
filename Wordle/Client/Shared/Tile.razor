@@ -1,0 +1,45 @@
+﻿<div class="win" data-animation="@(Solved && !Loaded ? "bounce": "")" style="animation-delay: @((Delay + 2000).ToString())ms; padding-right:0; padding-left:0;" >
+    <div class="tile" data-state="@TileState" data-animation="@animation" style="animation-delay: @Delay.ToString()ms;">@TileValue</div>
+</div>
+
+
+@code {
+    [Parameter]
+    public int Delay { get; set; }
+    [Parameter]
+    public int Column { get; set; }
+    [Parameter]
+    public string TileValue { get; set; }
+    [Parameter]
+    public string animation { get; set; } = "idle";
+    [Parameter]
+    public string TileState { get; set; } = "empty";
+    [Parameter]
+    public bool Solved { get; set; }
+    [Parameter] 
+    public int TransitionDurationMilliseconds { get; set; }
+    [Parameter]
+    public string SavedTileState { get; set; } = "tbd";
+    [Parameter]
+    public bool Loaded { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {   
+        if(animation == "flip-in" && Loaded == true)
+        {
+            string preState = TileState;
+            TileState = "empty";
+            await Task.Delay(TransitionDurationMilliseconds + 300);
+            TileState = preState;
+            animation = "idle";
+        }
+        else if(animation == "flip-in")
+        {
+            string preState = TileState;
+            TileState = SavedTileState;
+            await Task.Delay(TransitionDurationMilliseconds + 400);
+            TileState = preState;
+            animation = "idle";
+        }
+    }
+}

@@ -1,0 +1,29 @@
+﻿.instructions {
+    font-size: 14px;
+    color: var(--color-tone-1)
+}
+
+.examples {
+    border-bottom: 1px solid var(--color-tone-4);
+    border-top: 1px solid var(--color-tone-4);
+}
+
+.example {
+    margin-top: 14px;
+    margin-bottom: 14px;
+}
+
+.tile {
+    width: 65px;
+    height: 56px;
+    margin-left: -19px;
+}
+
+:host([page]) section {
+    padding: 16px;
+    padding-top: 0px;
+}
+
+p{
+    margin-bottom: 10px;
+}

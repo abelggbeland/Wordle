@@ -1,0 +1,21 @@
+﻿@inherits LayoutComponentBase
+@using Blazored.Toast.Configuration
+@inject IJSRuntime JSRuntime
+
+<Toast></Toast>
+
+<div class="page" style="height = 100%">
+    <main>
+
+
+    </main>
+    @Body
+</div>
+
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeVoidAsync("focusInput", "backgroundkeyboard");
+    }
+}
