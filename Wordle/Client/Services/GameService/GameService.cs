@@ -366,18 +366,18 @@ namespace Wordle.Client.Services.GameService
 
         }
 
-        public async Task<TimeSpan> GetTime()
+        public async Task<DateTime> GetTime()
         {
             
             if (await _localStorage.ContainKeyAsync("Time"))
             {
-                return await _localStorage.GetItemAsync<TimeSpan>("Time");
+                return await _localStorage.GetItemAsync<DateTime>("Time");
             }
             else
             {
-                TimeSpan untilMidnight = DateTime.Today.AddDays(1.0) - DateTime.Now;
-                await _localStorage.SetItemAsync<TimeSpan>("Time", untilMidnight);
-                return await _localStorage.GetItemAsync<TimeSpan>("Time");
+                DateTime time = DateTime.Now;
+                await _localStorage.SetItemAsync<DateTime>("Time", time);
+                return await _localStorage.GetItemAsync<DateTime>("Time");
             }
         }
 

@@ -44,6 +44,6 @@ namespace Wordle.Client.Services.GameService
         Task<bool> GetHighContrast();
         Task SetHighContrast(bool value);
         Task SetTime();
-        Task<TimeSpan> GetTime();
+        Task<DateTime> GetTime();
     }
 }

@@ -112,8 +112,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        TimeSpan Lasttime = await gameService.GetTime();
-        if ((DateTime.Today.AddDays(1.0) - DateTime.Now) > Lasttime)
+        DateTime Lasttime = await gameService.GetTime();
+        if (DateTime.Now.Date != Lasttime.Date)
         {
             await gameService.ResetGame();
             await gameService.SetTime();
