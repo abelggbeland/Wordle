@@ -338,8 +338,6 @@ namespace Wordle.Client.Services.GameService
 
         public async Task<List<List<string>>> GetRowShow()
         {
-            var test = await _localStorage.ContainKeyAsync("RowShow");
-
             if (await _localStorage.ContainKeyAsync("RowShow"))
             {
                 List<List<string>> rowShow = await _localStorage.GetItemAsync<List<List<string>>>("RowShow");
