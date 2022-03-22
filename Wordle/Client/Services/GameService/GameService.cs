@@ -434,7 +434,7 @@ namespace Wordle.Client.Services.GameService
         {
             await _localStorage.SetItemAsync<string>("checkString", checkString);
         }
-        public string Word { get; set; } = "cunts";
+        public string Word { get; set; } = "could";
 
         public async Task<bool> checkWord(int row)
         {
